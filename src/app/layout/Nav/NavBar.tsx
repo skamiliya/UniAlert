@@ -11,7 +11,7 @@ export default function NavBar() {
             <MenuItem name = 'Report' />
 
             <MenuItem>
-            <Button floated='right' positive = {true} inverted = {true} content = 'Create Report'/>
+            <Button floated='right' positive = {true} inverted = {true} color='red' content = 'Create Report' />
             </MenuItem>
             <MenuItem position='right'>
                 <Button basic inverted content = 'Login'/>
