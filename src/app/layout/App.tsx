@@ -2,17 +2,19 @@
 import { Container } from "semantic-ui-react"
 import ReportDashboard from "../features/reports/dashboard/ReportDashboard"
 import NavBar from "./nav/NavBar"
+import { useState } from "react";
 
 
 function App() {
+  const [formOpen, setFormOpen] = useState(false);
 
   return (
-  <>
- <NavBar/>
-<Container className="main">
-<ReportDashboard/>
-</Container>
-</>
+    <>
+      <NavBar setFormOpen={setFormOpen}/>
+      <Container className="main">
+        <ReportDashboard formOpen={formOpen} setFormOpen={setFormOpen} />
+      </Container>
+    </>
   )
 }
 
