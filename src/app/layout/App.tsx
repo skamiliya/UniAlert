@@ -1,7 +1,7 @@
 
 import { Container } from "semantic-ui-react"
 import ReportDashboard from "../features/reports/dashboard/ReportDashboard"
-import NavBar from "./Nav/NavBar"
+import NavBar from "./nav/NavBar"
 
 
 function App() {

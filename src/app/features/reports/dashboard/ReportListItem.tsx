@@ -1,17 +1,22 @@
-import { Button, Icon, Item, ItemDescription, ItemGroup, Segment, SegmentGroup } from "semantic-ui-react";
+import { Button, Icon, Item, ItemDescription, ItemGroup, List, Segment, SegmentGroup } from "semantic-ui-react";
+import ReportListAttendee from "./ReportListAttendee";
+import { AppReport } from "../../../types/report";
 
+type Props = {
+    report: AppReport
+}
 
-export default function ReportListItem() {
+export default function ReportListItem({report}: Props) {
   return (
     <SegmentGroup>
         <Segment>
             <ItemGroup>
                 <Item>
-                    <Item.Image size="tiny" circular src ='/user.png'/>
+                    <Item.Image size="tiny" circular src ={report.hostPhotoURL} />
                     <Item.Content>
-                        <Item.Header>Report</Item.Header>
+                        <Item.Header>{report.title}</Item.Header>
                         <ItemDescription>
-                            Reported by Anonym
+                            Hosted by {report.hostedBy}
                         </ItemDescription>
                     </Item.Content>
 
@@ -20,15 +25,23 @@ export default function ReportListItem() {
         </Segment>
         <Segment>
             <span>
-                <Icon name='clock'/> Date
-                <Icon name='map marker alternate icon'/> Place
+                <Icon name='clock'/> {report.date}
+                <Icon name='map marker alternate'/> {report.venue}
             </span>
+        </Segment>
+        <Segment secondary>
+            <List Horizontal>
+                <ReportListAttendee />
+                {report.attendees.map((attendee: any) => (
+                    <ReportListAttendee attendee={attendee} />
+                ))}
+            </List>
         </Segment>
         <Segment clearing>
             <span>
-                Description of the report
+                {report.description}
             </span>
-            <Button color='green' floated="right" content="See View" />
+            <Button color='green' floated="right" content="View Map" />
         </Segment>
     </SegmentGroup>
   )
