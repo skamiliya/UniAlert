@@ -1,16 +1,16 @@
 export type AppReport = {
     id: string
     title: string
+    createBy: string
     date: string
-    description: string
     city: string
-    venue: string
-    hostedBy: string
+    place: string
+    description: string
     hostPhotoURL: string
-    attendees: Attendee[]
+    users: User[]
 }
 
-export type Attendee = {
+export type User = {
     id: string
     name: string
     photoURL: string

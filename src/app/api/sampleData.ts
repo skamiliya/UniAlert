@@ -6,10 +6,10 @@ export const sampleData = [
         category: 'culture',
         description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus sollicitudin ligula eu leo tincidunt, quis scelerisque magna dapibus. Sed eget ipsum vel arcu vehicula ullamcorper.',
         city: 'NY, USA',
-        venue: 'Empire State Building, 5th Avenue, New York, NY, USA',
-        hostedBy: 'Bob',
+        place: 'Empire State Building, 5th Avenue, New York, NY, USA',
+        createBy: 'Bob',
         hostPhotoURL: 'https://randomuser.me/api/portraits/men/20.jpg',
-        attendees: [
+        users: [
             {
                 id: 'a',
                 name: 'Bob',
@@ -29,10 +29,10 @@ export const sampleData = [
         category: 'drinks',
         description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus sollicitudin ligula eu leo tincidunt, quis scelerisque magna dapibus. Sed eget ipsum vel arcu vehicula ullamcorper.',
         city: 'London, UK',
-        venue: 'Punch & Judy, Henrietta Street, London, UK',
-        hostedBy: 'Tom',
+        place: 'Punch & Judy, Henrietta Street, London, UK',
+        createBy: 'Tom',
         hostPhotoURL: 'https://randomuser.me/api/portraits/men/22.jpg',
-        attendees: [
+        users: [
             {
                 id: 'a',
                 name: 'Bob',
