@@ -1,17 +1,8 @@
 import { ChangeEvent, useState } from "react";
 import { Button, Form, Header, Segment } from "semantic-ui-react";
-import { AppReport } from "../../../types/report";
-import { createId } from "@paralleldrive/cuid2";
 
-type Props = {
-  setFormOpen: (value: boolean) => void;
-  addReport: (report: AppReport) => void;
-  selectedReport: AppReport | null
-  updateReport: (report: AppReport) => void;
-};
-
-export default function ReportForm({ setFormOpen, addReport, selectedReport, updateReport }: Props) {
-  const initialValues = selectedReport ?? {
+export default function ReportForm() {
+  const initialValues = {
     title: "",
     category: "",
     description: "",
@@ -20,10 +11,11 @@ export default function ReportForm({ setFormOpen, addReport, selectedReport, upd
   const [values, setValues] = useState(initialValues);
 
   function onSubmit(){
-    selectedReport 
-        ? updateReport({...selectedReport, ...values})
-        : addReport({...values, id: createId(), createBy: '', city: '', place: '', hostPhotoURL: '', users: []})
-    setFormOpen(false);
+    console.log(values);
+    // selectedReport 
+    //     ? updateReport({...selectedReport, ...values})
+    //     : addReport({...values, id: createId(), createBy: '', city: '', place: '', hostPhotoURL: '', users: []})
+    // setFormOpen(false);
   }
 
   function handleInputChange(r: ChangeEvent<HTMLInputElement>) {
@@ -32,7 +24,7 @@ export default function ReportForm({ setFormOpen, addReport, selectedReport, upd
   }
   return (
     <Segment clearing>
-      <Header content={selectedReport ? "Update event" : "Create Report"} />
+      <Header content={"Create Report"} />
       <Form onSubmit={onSubmit}>
         <Form.Field>
           <input
@@ -63,7 +55,6 @@ export default function ReportForm({ setFormOpen, addReport, selectedReport, upd
         </Form.Field>
         <Button type="submit" floated="right" positive content="Submit" />
         <Button
-          onClick={() => setFormOpen(false)}
           type="button"
           floated="right"
           content="Cancel"

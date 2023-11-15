@@ -10,14 +10,13 @@ import {
 } from "semantic-ui-react";
 import ReportListUser from "./ReportListUser";
 import { AppReport } from "../../../types/report";
+import { Link } from "react-router-dom";
 
 type Props = {
   report: AppReport;
-  selectReport: (report: AppReport) => void;
-  deleteReport: (reportId: string) => void;
 };
 
-export default function ReportListItem({ report, selectReport, deleteReport }: Props) {
+export default function ReportListItem({ report }: Props) {
   return (
     <SegmentGroup>
       <Segment>
@@ -46,14 +45,14 @@ export default function ReportListItem({ report, selectReport, deleteReport }: P
       </Segment>
       <Segment clearing>
         <span>{report.description}</span>
-        <Button animated color="red" floated ="right" onClick={() => deleteReport(report.id)}> 
+        <Button animated color="red" floated ="right" > 
           <Button.Content visible>Delete</Button.Content>
           <Button.Content hidden >
             <Icon name="arrow right"/>
           </Button.Content>
         </Button>
 
-        <Button animated color="green" floated ="right" onClick={() => selectReport(report)}> 
+        <Button as={Link} to={'/report/${report.id}'}animated color="green" floated ="right" > 
           <Button.Content visible>View Map</Button.Content>
           <Button.Content hidden >
             <Icon name="arrow right"/>
