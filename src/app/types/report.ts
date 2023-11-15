@@ -2,6 +2,7 @@ export type AppReport = {
     id: string
     title: string
     createBy: string
+    category: string
     date: string
     city: string
     place: string

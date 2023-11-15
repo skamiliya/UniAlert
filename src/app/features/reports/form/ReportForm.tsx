@@ -1,12 +1,17 @@
 import { ChangeEvent, useState } from "react";
 import { Button, Form, Header, Segment } from "semantic-ui-react";
+import { AppReport } from "../../../types/report";
+import { createId } from "@paralleldrive/cuid2";
 
 type Props = {
   setFormOpen: (value: boolean) => void;
+  addReport: (report: AppReport) => void;
+  selectedReport: AppReport | null
+  updateReport: (report: AppReport) => void;
 };
 
-export default function ReportForm({ setFormOpen }: Props) {
-  const initialValues = {
+export default function ReportForm({ setFormOpen, addReport, selectedReport, updateReport }: Props) {
+  const initialValues = selectedReport ?? {
     title: "",
     category: "",
     description: "",
@@ -15,7 +20,10 @@ export default function ReportForm({ setFormOpen }: Props) {
   const [values, setValues] = useState(initialValues);
 
   function onSubmit(){
-    console.log(values);
+    selectedReport 
+        ? updateReport({...selectedReport, ...values})
+        : addReport({...values, id: createId(), createBy: '', city: '', place: '', hostPhotoURL: '', users: []})
+    setFormOpen(false);
   }
 
   function handleInputChange(r: ChangeEvent<HTMLInputElement>) {
@@ -24,7 +32,7 @@ export default function ReportForm({ setFormOpen }: Props) {
   }
   return (
     <Segment clearing>
-      <Header content="Create Report" />
+      <Header content={selectedReport ? "Update event" : "Create Report"} />
       <Form onSubmit={onSubmit}>
         <Form.Field>
           <input
