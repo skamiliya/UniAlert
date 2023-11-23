@@ -1,21 +1,16 @@
 import {Grid} from 'semantic-ui-react'
 import ReportList from './ReportList'
-import ReportForm from '../form/ReportForm'
-import { sampleData } from '../../../api/sampleData'
-import { useEffect, useState } from 'react'
-import { AppReport } from '../../../types/report'
+import { useAppSelector } from '../../../store/store'
 
 export default function ReportDashboard() {
-  const [report, setReport] = useState<AppReport[]>([])
+  const {reports} = useAppSelector(state => state.reports)
 
-  useEffect(() => {
-    setReport(sampleData);
-  }, [])
+
 
   return (
     <Grid>
         <Grid.Column width={10}>
-            <ReportList report={report} />
+            <ReportList reports={reports} />
         </Grid.Column>
         <Grid.Column width={6}>
           <h2>Filters</h2>

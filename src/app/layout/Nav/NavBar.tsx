@@ -14,12 +14,13 @@ export default function NavBar() {
           <img src="/logo.png" alt="logo" />
           UniAlert
         </MenuItem>
-        <MenuItem name='Report' as={NavLink} to='/report' />
+        <MenuItem name='Report' as={NavLink} to={`/reports`} />
+        <MenuItem name='Scratch' as={NavLink} to={`/scratch`} />
 
         <MenuItem>
           <Button
             as={NavLink}
-            to='/createReport'
+            to={`/createReport`}
             floated='right'
             positive={true}
             inverted={true}

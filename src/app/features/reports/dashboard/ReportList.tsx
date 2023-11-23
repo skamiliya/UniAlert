@@ -2,17 +2,17 @@ import { AppReport } from "../../../types/report";
 import ReportListItem from "./ReportListItem";
 
 type Props = {
-  report: AppReport[]
+  reports: AppReport[]
 }
 
 
-export default function ReportList({report}: Props) {
+export default function ReportList({reports}: Props) {
   return (
     <>
-    {report.map(report => (
+    {reports.map(reports => (
       <ReportListItem
-          key={report.id}
-          report={report}/>
+          key={reports.id}
+          report={reports}/>
     ))}
     </>
   )

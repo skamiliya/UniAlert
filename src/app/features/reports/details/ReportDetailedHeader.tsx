@@ -1,6 +1,12 @@
+import { Link } from "react-router-dom";
 import { Segment, Item, Header, Button, Image } from "semantic-ui-react";
+import { AppReport } from "../../../types/report";
 
-export default function ReportDetailedHeader() {
+type Props ={
+    report: AppReport
+}
+
+export default function ReportDetailedHeader({report}: Props) {
 const reportImageStyle = {
     filter: 'brightness(30%)'
 }
@@ -17,7 +23,7 @@ const reportImageTextStyle = {
     return (
         <Segment.Group>
             <Segment basic attached="top" style={{ padding: '0' }}>
-                <Image src={`/categoryImages/lostphone.jpg`} fluid style={reportImageStyle} />
+                <Image src={`/categoryImages/${report.category}.jpg`} fluid style={reportImageStyle} />
 
                 <Segment basic style={reportImageTextStyle}>
                     <Item.Group>
@@ -25,12 +31,12 @@ const reportImageTextStyle = {
                             <Item.Content>
                                 <Header
                                     size="huge"
-                                    content='Report Title'
+                                    content={report.title}
                                     style={{ color: 'white' }}
                                 />
-                                <p> Report Date </p>
+                                <p> {report.date} </p>
                                 <p>
-                                    Hosted by <strong>Bob</strong>
+                                    {report.createBy} <strong></strong>
                                 </p>
                             </Item.Content>
                         </Item>
@@ -39,10 +45,9 @@ const reportImageTextStyle = {
             </Segment>
 
             <Segment attached="bottom">
-                <Button>Cancel My Place</Button>
+                <Button>Cancel Report</Button>
                 <Button color="teal">SEE THIS REPORT</Button>
-
-                <Button color="orange" floated="right">
+                <Button as ={Link} to ={`/manage/${report.id}`} color="orange" floated="right">
                     Manage Report
                 </Button>
             </Segment>

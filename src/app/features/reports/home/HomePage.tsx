@@ -1,4 +1,4 @@
-import React from 'react'
+
 import { Link } from 'react-router-dom'
 import { Container, Header, Segment, Image, Icon, Button } from 'semantic-ui-react'
 
@@ -10,7 +10,7 @@ export default function HomePage() {
           <Image size='massive' src='/logo.png' alt='logo' style={{marginBottom: 12}} />
           UniAlert
         </Header>
-        <Button size='huge' inverted as={Link} to='/report'>
+        <Button size='huge' inverted as={Link} to={`/reports`}>
           Get Started
           <Icon name='caret right' inverted />
         </Button>
