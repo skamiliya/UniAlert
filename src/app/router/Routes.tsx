@@ -13,7 +13,7 @@ export const router = createBrowserRouter([
             {path: '/reports', element: <ReportDashboard />},
             {path: '/reports/:id', element: <ReportDetailedPage />},
             {path: '/manage/:id', element: <ReportForm />},
-            {path: '/createReport', element: <ReportForm />},
+            {path: '/createReport', element: <ReportForm key='create' />},
             {path: '/scratch', element: <Scratch />},
         ]
     }
