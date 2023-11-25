@@ -25,7 +25,11 @@ export default function ReportListItem({ report }: Props) {
       <Segment>
         <ItemGroup>
           <Item>
-          <Item.Image size="tiny" circular src={report.hostPhotoURL || '/user.png'} />
+            <Item.Image
+              size="tiny"
+              circular
+              src={report.hostPhotoURL || "/categoryImages/user.png"}
+            />
             <Item.Content>
               <Item.Header>{report.title}</Item.Header>
               <ItemDescription>Created by {report.createBy}</ItemDescription>
@@ -40,25 +44,36 @@ export default function ReportListItem({ report }: Props) {
         </span>
       </Segment>
       <Segment secondary>
-        <List horizontal = {true}>
-          {report.users.map((user: any) => (
+        <List horizontal={true}>
+          {report.users.map((user) => (
             <ReportListUser key={user.id} user={user} />
           ))}
         </List>
       </Segment>
       <Segment clearing>
         <span>{report.description}</span>
-        <Button onClick={()=>dispatch(deleteReport(report.id))} animated color="red" floated ="right" > 
+        <Button
+          onClick={() => dispatch(deleteReport(report.id))}
+          animated
+          color="red"
+          floated="right"
+        >
           <Button.Content visible>Delete </Button.Content>
-          <Button.Content hidden >
-            <Icon name="arrow right"/>
+          <Button.Content hidden>
+            <Icon name="arrow right" />
           </Button.Content>
         </Button>
 
-        <Button as={Link} to={`/reports/${report.id}`}animated color="green" floated ="right" > 
+        <Button
+          as={Link}
+          to={`/reports/${report.id}`}
+          animated
+          color="green"
+          floated="right"
+        >
           <Button.Content visible>View Map</Button.Content>
-          <Button.Content hidden >
-            <Icon name="arrow right"/>
+          <Button.Content hidden>
+            <Icon name="arrow right" />
           </Button.Content>
         </Button>
       </Segment>

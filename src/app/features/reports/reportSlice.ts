@@ -1,19 +1,32 @@
-import { createSlice } from "@reduxjs/toolkit"
-import { sampleData } from "../../api/sampleData"
+import { PayloadAction, createSlice } from "@reduxjs/toolkit"
 import { AppReport } from "../../types/report"
+import { Timestamp } from "firebase/firestore"
 
 type State ={
     reports: AppReport []
 }
 
 const initialState: State = {
-    reports: sampleData
+    reports:  []
 }
 
 export const reportSlice = createSlice ({
     name : 'reports',
     initialState,
     reducers: {
+        setReports:{
+            reducer: (state,action: PayloadAction<AppReport[]>) =>{
+                state.reports = action.payload
+            },
+            prepare: (reports:any) =>{
+                const mapped = reports.map((r:any) => {
+                    return {...r,date: (r.date as Timestamp).toDate().toDateString()}
+
+                });
+                return {payload:mapped}
+            }
+        },
+
         createReport: (state, action) => {
             state.reports.push(action.payload);
         },
@@ -27,4 +40,4 @@ export const reportSlice = createSlice ({
 })
   
 
-export const {createReport,updateReport, deleteReport} = reportSlice.actions;
+export const {createReport,updateReport, deleteReport, setReports} = reportSlice.actions;

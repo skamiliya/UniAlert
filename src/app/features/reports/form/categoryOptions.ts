@@ -4,6 +4,7 @@ export const categoryOptions = [
     { text: 'Assault', value: 'assault' },
     { text: 'Theft', value: 'theft' },
     { text: 'Vandalism', value: 'vandalism' },
+    { text: 'LostPhone', value: 'lostphone' },
     { text: 'Accident', value: 'accident' },
     // Add more categories as needed
   ];

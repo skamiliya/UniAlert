@@ -1,13 +1,15 @@
+import { Timestamp } from "firebase/firestore";
+
 export const sampleData = [
     {
         id: '1',
-        title: 'Trip to Empire State building',
-        date: '2018-03-21',
-        category: 'culture',
-        description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus sollicitudin ligula eu leo tincidunt, quis scelerisque magna dapibus. Sed eget ipsum vel arcu vehicula ullamcorper.',
-        city: 'NY, USA',
-        place: 'Empire State Building, 5th Avenue, New York, NY, USA',
-        createBy: 'Bob',
+        title: 'Kehilangan iPhone 14 Pro',
+        date: Timestamp.fromDate(new Date(Date.now()+30 *8640000 )),
+        category: 'lostphone',
+        description: 'Terahir lihat di perpus, HPnya warna hitam.',
+        city: 'Depok, IDN',
+        place: 'Perpus UI',
+        createBy: 'Ruben',
         hostPhotoURL: 'https://randomuser.me/api/portraits/men/20.jpg',
         users: [
             {
@@ -24,13 +26,13 @@ export const sampleData = [
     },
     {
         id: '2',
-        title: 'Trip to Punch and Judy Pub',
-        date: '2018-03-18',
-        category: 'drinks',
-        description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus sollicitudin ligula eu leo tincidunt, quis scelerisque magna dapibus. Sed eget ipsum vel arcu vehicula ullamcorper.',
-        city: 'London, UK',
-        place: 'Punch & Judy, Henrietta Street, London, UK',
-        createBy: 'Tom',
+        title: 'Nemu Handphone iPhone 14',
+        date: Timestamp.fromDate(new Date(Date.now()+ 60 * 8640000 )),
+        category: 'lostphone',
+        description: 'bagi yang kehilangan iPhone di perpus, tadi dah saya kasih ke petugasnya ya',
+        city: 'Depok',
+        place: 'Satpam Perpus UI',
+        createBy: 'Tomi',
         hostPhotoURL: 'https://randomuser.me/api/portraits/men/22.jpg',
         users: [
             {
