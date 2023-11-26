@@ -2,7 +2,7 @@ import { Grid } from 'semantic-ui-react';
 import ReportList from './ReportList';
 import { useAppDispatch, useAppSelector } from '../../../store/store';
 import { useEffect, useState } from 'react';
-import { QuerySnapshot, collection, onSnapshot, query } from 'firebase/firestore';
+import {collection, onSnapshot, query } from 'firebase/firestore';
 import { db } from '../../../config/firebase';
 import { AppReport } from '../../../types/report';
 import { setReports } from '../reportSlice';

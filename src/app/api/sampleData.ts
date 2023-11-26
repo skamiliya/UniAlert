@@ -6,7 +6,7 @@ export const sampleData = [
         title: 'Kehilangan iPhone 14 Pro',
         date: Timestamp.fromDate(new Date(Date.now()+30 *8640000 )),
         category: 'lostphone',
-        description: 'Terahir lihat di perpus, HPnya warna hitam.',
+        description: 'Terahir lihat di perpus, HPnya warna hitam. Tolong balikin yang lihat atau menemukan',
         city: 'Depok, IDN',
         place: 'Perpus UI',
         createBy: 'Ruben',
