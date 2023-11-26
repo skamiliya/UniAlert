@@ -4,43 +4,32 @@ import ReportDetailedHeader from './ReportDetailedHeader'
 import ReportDetailedChat from './ReportDetailedChat'
 import ReportDetailedSidebar from './ReportDetailedSidebar'
 import { useParams } from 'react-router-dom'
-import { useAppDispatch, useAppSelector } from '../../../store/store'
-import { useEffect, useState } from 'react'
-import { doc, onSnapshot } from 'firebase/firestore'
-import { db } from '../../../config/firebase'
-import { setReports } from '../reportSlice'
-import { toast } from 'react-toastify'
+import { useAppSelector } from '../../../store/store'
+import { useEffect } from 'react'
+import { actions } from '../reportSlice'
 import LoadingComponent from '../../../layout/LoadingComponent'
+import { useFirestore } from '../../../hooks/firestore/useFirestore'
 
 export default function ReportDetailedPage() {
-  const {id} = useParams();
-  const report = useAppSelector(state => state.reports.reports.find(rpt=>rpt.id === id));
-  const dispatch = useAppDispatch();
-  const [loading, setLoading]= useState(true);
-  useEffect(()=>{
-    if(!id) return;
-    const unsubscribe = onSnapshot(doc(db, 'report', id), {
-      next : doc =>{
-        dispatch(setReports({id:doc.id,...doc.data()}))
-        setLoading(false);
-      }, 
-      error : err =>{
-        console.log(err)
-        toast.error(err.message)
-        setLoading(false)
-      }
-    })
-    return ()=> unsubscribe()
-  }, [id, dispatch]);
-  if (loading) return <LoadingComponent/>
+  const { id } = useParams();
+  const report = useAppSelector(state => state.reports.data.find(rpt => rpt.id === id));
+  const status = useAppSelector(state => state.reports);
+  const {loadDocument} = useFirestore('reports');
 
-  if(!report) return <h2>Report not Found!</h2>
-  
+  useEffect(() => {
+    if (!id) return;
+    loadDocument(id, actions)
+  }, [id, loadDocument]);
+
+  if (status === 'loading') return <LoadingComponent />
+
+  if (!report) return <h2>Report not Found!</h2>
+
   return (
     <Grid>
       <Grid.Column width={10}>
-        <ReportDetailedHeader report = {report}/>
-        <ReportDetailedInfo  report = {report}/>
+        <ReportDetailedHeader report={report} />
+        <ReportDetailedInfo report={report} />
         <ReportDetailedChat />
       </Grid.Column>
       <Grid.Column width={6}>

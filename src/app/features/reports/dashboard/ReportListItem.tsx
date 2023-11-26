@@ -11,15 +11,30 @@ import {
 import ReportListUser from "./ReportListUser";
 import { AppReport } from "../../../types/report";
 import { Link } from "react-router-dom";
-import { useAppDispatch } from "../../../store/store";
-import { deleteReport } from "../reportSlice";
+import { useState } from "react";
+import { toast } from "react-toastify";
+import { deleteDoc, doc } from "firebase/firestore";
+import { db } from "../../../config/firebase";
 
 type Props = {
   report: AppReport;
 };
 
 export default function ReportListItem({ report }: Props) {
-  const dispatch = useAppDispatch();
+  const [loading, setLoading] = useState(false);
+
+  async function removeReport() {
+    setLoading(true);
+    try {
+      await deleteDoc(doc(db, 'reports', report.id))
+    } catch (error: any) {
+      console.log(error);
+      toast.error(error.message);
+    } finally {
+      setLoading(false);
+    }
+  }
+
   return (
     <SegmentGroup>
       <Segment>
@@ -45,7 +60,7 @@ export default function ReportListItem({ report }: Props) {
       </Segment>
       <Segment secondary>
         <List horizontal={true}>
-          {report.users.map((user) => (
+          {report.users.map(user => (
             <ReportListUser key={user.id} user={user} />
           ))}
         </List>
@@ -53,7 +68,8 @@ export default function ReportListItem({ report }: Props) {
       <Segment clearing>
         <span>{report.description}</span>
         <Button
-          onClick={() => dispatch(deleteReport(report.id))}
+          loading={loading}
+          onClick={removeReport}
           animated
           color="red"
           floated="right"

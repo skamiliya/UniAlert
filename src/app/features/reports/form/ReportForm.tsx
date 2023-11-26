@@ -39,7 +39,7 @@ export default function ReportForm() {
 
   async function createReport(data: FieldValues) {
     const newReportRef = doc(collection(db, 'reports'));
-await setDoc(newReportRef, {
+    await setDoc(newReportRef, {
       ...data,
       createBy: "bob",
       city: "",
@@ -54,22 +54,22 @@ await setDoc(newReportRef, {
   async function onSubmit(data: FieldValues) {
     try {
       console.log("Submitting form data:", data);
-  
+
       if (report) {
         await updateReport({ ...report, ...data });
         console.log("Updated report:", report);
-        navigate(`/reports/${report.id}`);  
+        navigate(`/reports/${report.id}`);
       } else {
         const ref = await createReport(data);
         console.log("Created report:", ref);
-        navigate(`/reports/${ref.id}`);  
+        navigate(`/reports/${ref.id}`);
       }
     } catch (error: any) {
       toast.error(error.message);
       console.error(error.message);
     }
   }
-  
+
   return (
     <Segment clearing>
       <Header content="Report details" sub color="teal" />

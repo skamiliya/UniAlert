@@ -1,43 +1,35 @@
-import { PayloadAction, createSlice } from "@reduxjs/toolkit";
+import { PayloadAction } from "@reduxjs/toolkit";
 import { AppReport } from "../../types/report";
 import { Timestamp } from "firebase/firestore";
+import { GenericActions, GenericState, createGenericSlice } from "../../store/genericSlice";
 
 type State = {
-  reports: AppReport[];
+  data: AppReport[]
 };
 
 const initialState: State = {
-  reports: [],
+  data: []
 };
 
-export const reportSlice = createSlice({
+export const reportSlice = createGenericSlice({
   name: "reports",
-  initialState,
+  initialState: initialState as GenericState<AppReport[]>,
   reducers: {
-    setReports: {
+    success: {
       reducer: (state, action: PayloadAction<AppReport[]>) => {
-        state.reports = action.payload;
+        state.data = action.payload;
+        state.status = 'finished'
       },
       prepare: (reports: any) => {
         let reportArray: AppReport[] = [];
-        Array.isArray(reports) ? reportArray =  reports : reportArray.push(reports)
+        Array.isArray(reports) ? reportArray = reports : reportArray.push(reports)
         const mapped = reportArray.map((r: any) => {
-          return { ...r, date :(r.date as Timestamp).toDate().toISOString()}
+          return { ...r, date: (r.date as Timestamp).toDate().toISOString() }
         });
         return { payload: mapped }
-      }      
+      }
     },
-
-    createReport: (state, action) => {
-      state.reports.push(action.payload);
-    },
-    updateReport: (state, action) => {
-      state.reports[state.reports.findIndex((rpt) => rpt.id === action.payload.id)] = action.payload;
-    },
-    deleteReport: (state, action) => {
-      state.reports.splice(state.reports.findIndex((rpt) => rpt.id === action.payload), 1);
-    },
-  },
+  }
 });
 
-export const { createReport, updateReport, deleteReport, setReports } = reportSlice.actions;
+export const actions = reportSlice.actions as GenericActions<AppReport[]>

@@ -1,41 +1,20 @@
 import { Grid } from 'semantic-ui-react';
 import ReportList from './ReportList';
-import { useAppDispatch, useAppSelector } from '../../../store/store';
-import { useEffect, useState } from 'react';
-import {collection, onSnapshot, query } from 'firebase/firestore';
-import { db } from '../../../config/firebase';
-import { AppReport } from '../../../types/report';
-import { setReports } from '../reportSlice';
+import { useAppSelector } from '../../../store/store';
 import LoadingComponent from '../../../layout/LoadingComponent';
+import { actions } from '../reportSlice';
+import { useFirestore } from '../../../hooks/firestore/useFirestore';
+import { useEffect } from 'react';
 
 export default function ReportDashboard() {
-  const { reports } = useAppSelector(state => state.reports);
-  const dispatch = useAppDispatch();
-  const [loading, setLoading] = useState(true);
-
+  const {data: reports, status} = useAppSelector(state => state.reports);
+  const {loadCollection} = useFirestore('reports');
 
   useEffect(() => {
-    const q = query(collection(db, 'reports'));
-    const unsubscribe = onSnapshot(q, {
-      next: QuerySnapshot => {
-        const rpt: AppReport[] = [];
-        QuerySnapshot.forEach(doc => {
-          rpt.push({ id:  doc.id, ...doc.data()} as AppReport );
-        });
-        dispatch(setReports(rpt));
-        setLoading(false);
-        
-      },
-      error: err => {
-        console.error(err);
-        setLoading(false);
-      },
-      complete: () => console.log('This will not be reached')
-    });
-    return () => unsubscribe();
-  }, [dispatch]);
+    loadCollection(actions)
+  }, [loadCollection]);
 
-if (loading) return <LoadingComponent/>
+  if (status === 'loading') return <LoadingComponent />
 
   return (
     <Grid>

@@ -8,12 +8,12 @@ import { doc, setDoc } from 'firebase/firestore';
 import { db } from '../../config/firebase';
 
 export default function NavBar() {
-  const {authenticated} = useAppSelector(state => state.auth)
+  const { authenticated } = useAppSelector(state => state.auth)
 
-  function seedData(){
+  function seedData() {
     sampleData.forEach(async report => {
-      const{id,...rest}= report;
-      await setDoc(doc(db,'reports', id), {
+      const { id, ...rest } = report;
+      await setDoc(doc(db, 'reports', id), {
         ...rest
       })
     })
@@ -41,11 +41,11 @@ export default function NavBar() {
         </MenuItem>
         {import.meta.env.DEV && (
           <MenuItem>
-          <Button 
-          inverted ={true}
-          color='teal'
-          content='Seed data'
-          onClick={seedData}/>
+            <Button
+              inverted={true}
+              color='teal'
+              content='Seed data'
+              onClick={seedData} />
           </MenuItem>
         )}
         {authenticated ? <SignedInMenu /> : <SignedOutButtons />}
