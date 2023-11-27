@@ -7,11 +7,14 @@ import "react-datepicker/dist/react-datepicker.css";
 import DatePicker from "react-datepicker";
 import { AppReport } from "../../../types/report";
 import { Timestamp } from "firebase/firestore";
-import { collection, doc, setDoc, updateDoc } from "firebase/firestore";
-import { db } from "../../../config/firebase";
 import { toast } from "react-toastify";
+import { useFirestore } from "../../../hooks/firestore/useFirestore";
+import { useEffect } from "react";
+import { actions } from "../reportSlice";
+import LoadingComponent from "../../../layout/LoadingComponent";
 
 export default function ReportForm() {
+  const { loadDocument, create, update } = useFirestore('reports');
   const {
     register,
     control,
@@ -20,26 +23,32 @@ export default function ReportForm() {
     formState: { errors, isValid, isSubmitting },
   } = useForm({
     mode: "onTouched",
+    defaultValues: async () => {
+      if (report) return { ...report, date: new Date(report.date) }
+    }
   });
-
   const { id } = useParams();
   const report = useAppSelector((state) =>
-    state.reports.reports.find((r) => r.id === id)
+    state.reports.data.find((r) => r.id === id)
   );
+  const { status } = useAppSelector(state => state.reports);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!id) return;
+    loadDocument(id, actions)
+  }, [id, loadDocument])
 
   async function updateReport(data: AppReport) {
     if (!report) return;
-    const docRef = doc(db, 'reports', report.id);
-    await updateDoc(docRef, {
+    await update(data.id, {
       ...data,
       date: Timestamp.fromDate(data.date as unknown as Date),
     });
   }
 
   async function createReport(data: FieldValues) {
-    const newReportRef = doc(collection(db, 'reports'));
-    await setDoc(newReportRef, {
+    const ref = await create({
       ...data,
       createBy: "bob",
       city: "",
@@ -48,7 +57,14 @@ export default function ReportForm() {
       users: [],
       date: Timestamp.fromDate(data.date as unknown as Date),
     });
-    return newReportRef;
+    return ref;
+  }
+
+  async function handleCancelToggle(report: AppReport) {
+    await update(report.id, {
+      isCancelled: !report.isCancelled
+    });
+    toast.success(`Report has been ${report.isCancelled ? 'uncancelled' : 'cancelled'}`)
   }
 
   async function onSubmit(data: FieldValues) {
@@ -61,14 +77,15 @@ export default function ReportForm() {
         navigate(`/reports/${report.id}`);
       } else {
         const ref = await createReport(data);
-        console.log("Created report:", ref);
-        navigate(`/reports/${ref.id}`);
+        navigate(`/reports/${ref?.id}`);
       }
     } catch (error: any) {
       toast.error(error.message);
       console.error(error.message);
     }
   }
+
+  if (status === 'loading') return <LoadingComponent />
 
   return (
     <Segment clearing>
@@ -128,6 +145,16 @@ export default function ReportForm() {
             )}
           />
         </Form.Field>
+
+        {report && (
+          <Button
+          type='button'
+          floated='left'
+          color={report.isCancelled ? 'green' : 'red'}
+          onClick={() => handleCancelToggle(report)}
+          content={report.isCancelled ? 'Reactive report' : 'Cancel report'}
+          />
+        )}
 
         <Button
           loading={isSubmitting}

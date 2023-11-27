@@ -13,13 +13,13 @@ import { useFirestore } from '../../../hooks/firestore/useFirestore'
 export default function ReportDetailedPage() {
   const { id } = useParams();
   const report = useAppSelector(state => state.reports.data.find(rpt => rpt.id === id));
-  const status = useAppSelector(state => state.reports);
+  const {status} = useAppSelector(state => state.reports);
   const {loadDocument} = useFirestore('reports');
 
   useEffect(() => {
     if (!id) return;
     loadDocument(id, actions)
-  }, [id, loadDocument]);
+  }, [id, loadDocument])
 
   if (status === 'loading') return <LoadingComponent />
 

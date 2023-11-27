@@ -8,6 +8,7 @@ export type AppReport = {
     place: string
     description: string
     hostPhotoURL: string
+    isCancelled: boolean
     users: User[]
 }
 
