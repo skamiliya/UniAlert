@@ -13,6 +13,10 @@ export type AppReport = {
 }
 
 export type User = {
+    uid: string | undefined
+    email: string | null
+    displayName: string | null
+    providerData: any
     id: string
     name: string
     photoURL: string
