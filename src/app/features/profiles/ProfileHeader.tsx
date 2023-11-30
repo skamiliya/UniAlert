@@ -22,7 +22,7 @@ export default function ProfileHeader({profile} :Props ){
         <Grid.Column width={12}>
           <ItemGroup>
             <Item>
-              <Item.Image avatar size="small" src={profile.photoURL || "/user.png"} />
+              <Item.Image avatar size="small" src={profile.photoURL || "/categoryImages/user.png"} />
               <Item.Content verticalAlign="middle">
                 <Header
                   as="h2"

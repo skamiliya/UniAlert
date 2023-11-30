@@ -5,6 +5,7 @@ import { reportSlice } from '../features/reports/reportSlice';
 import { modalSlice } from '../common/modals/modalSlice';
 import { authSlice } from '../features/auth/authSlice';
 import { profileSlice } from '../features/profiles/profileSlice';
+import { photoSlice } from '../features/profiles/photoSlice';
 
 export const store = configureStore ({
     reducer: {
@@ -12,7 +13,8 @@ export const store = configureStore ({
         reports: reportSlice.reducer,
         modals: modalSlice.reducer,
         auth: authSlice.reducer,
-        profiles: profileSlice.reducer
+        profiles: profileSlice.reducer,
+        photos:photoSlice.reducer
     }
 
 })
