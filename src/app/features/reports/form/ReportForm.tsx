@@ -6,7 +6,7 @@ import { categoryOptions } from "./categoryOptions";
 import "react-datepicker/dist/react-datepicker.css";
 import DatePicker from "react-datepicker";
 import { AppReport } from "../../../types/report";
-import { Timestamp } from "firebase/firestore";
+import { Timestamp, arrayUnion } from "firebase/firestore";
 import { toast } from "react-toastify";
 import { useFirestore } from "../../../hooks/firestore/useFirestore";
 import { useEffect } from "react";
@@ -32,6 +32,7 @@ export default function ReportForm() {
     state.reports.data.find((r) => r.id === id)
   );
   const { status } = useAppSelector(state => state.reports);
+  const{currentUser} = useAppSelector(state=>state.auth);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -48,13 +49,21 @@ export default function ReportForm() {
   }
 
   async function createReport(data: FieldValues) {
+    if(!currentUser) return;
     const ref = await create({
       ...data,
-      createBy: "bob",
+      hostUid:currentUser.uid,
+      createBy: currentUser.displayName,
       city: "",
       place: "",
-      hostPhotoURL: "",
-      users: [],
+      hostPhotoURL: currentUser.photoURL,
+      users: arrayUnion({
+        id: currentUser.uid,
+        displayName:currentUser.displayName,
+        photoURL: currentUser.photoURL
+
+      }),
+      userIds:arrayUnion(currentUser.uid),
       date: Timestamp.fromDate(data.date as unknown as Date),
     });
     return ref;

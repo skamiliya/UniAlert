@@ -1,12 +1,21 @@
 import { Link } from "react-router-dom";
 import { Segment, Item, Header, Button, Image } from "semantic-ui-react";
 import { AppReport } from "../../../types/report";
+import { useAppSelector } from "../../../store/store";
+import { toast } from "react-toastify";
+import { useFirestore } from "../../../hooks/firestore/useFirestore";
+import { useState } from "react";
+import { arrayRemove, arrayUnion } from "firebase/firestore";
 
 type Props = {
   report: AppReport;
 };
 
 export default function ReportDetailedHeader({ report }: Props) {
+  const { currentUser } = useAppSelector((state) => state.auth);
+  const [loading, setLoading] = useState(false);
+  const { update } = useFirestore("reports");
+
   const reportImageStyle = {
     filter: "brightness(30%)",
   };
@@ -17,8 +26,36 @@ export default function ReportDetailedHeader({ report }: Props) {
     left: "5%",
     width: "100%",
     height: "auto",
-    coloe: "white",
+    color: "white",
   };
+
+  async function toggleUsers() {
+    if (!currentUser) {
+      toast.error("Must Be Logged in to do this");
+      return;
+    }
+
+    setLoading(true);
+
+    if (report.isGoing) {
+      const user = report.users.find((x) => x.id === currentUser.uid);
+      await update(report.id, {
+        users: arrayRemove(user),
+        userIds: arrayRemove(currentUser.uid),
+      });
+      setLoading(false);
+    } else {
+      await update(report.id, {
+        users: arrayUnion({
+          id: currentUser.uid,
+          displayName: currentUser.displayName,
+          photoURL: currentUser.photoURL,
+        }),
+        userIds: arrayUnion(currentUser.uid),
+      });
+      setLoading(false);
+    }
+  }
 
   return (
     <Segment.Group>
@@ -36,7 +73,8 @@ export default function ReportDetailedHeader({ report }: Props) {
                 <Header
                   size="huge"
                   content={report.title}
-                  style={{ color: "white" }}/>
+                  style={{ color: "white" }}
+                />
                 <p style={{ color: "white" }}> {report.date} </p>
                 <p style={{ color: "white" }}>{report.createBy} </p>
               </Item.Content>
@@ -45,17 +83,24 @@ export default function ReportDetailedHeader({ report }: Props) {
         </Segment>
       </Segment>
 
-      <Segment attached="bottom">
-        <Button>Cancel Report</Button>
-        <Button color="teal">SEE THIS REPORT</Button>
-        <Button
-          as={Link}
-          to={`/manage/${report.id}`}
-          color="orange"
-          floated="right"
-        >
-          Manage Report
-        </Button>
+      <Segment attached="bottom" clearing>
+        {report.isHost ? (
+          <Button
+            as={Link}
+            to={`/manage/${report.id}`}
+            color="orange"
+            floated="right"
+          >
+            Manage Report
+          </Button>
+        ) : (
+          <Button
+            content={report.isGoing ? "Unlike" : "Like"}
+            color={report.isGoing ? "grey" : "teal"}
+            onClick={toggleUsers}
+            loading={loading}
+          />
+        )}
       </Segment>
     </Segment.Group>
   );

@@ -33,7 +33,7 @@ export default function ReportDetailedPage() {
         <ReportDetailedChat />
       </Grid.Column>
       <Grid.Column width={6}>
-        <ReportDetailedSidebar />
+        <ReportDetailedSidebar report = {report}/>
       </Grid.Column>
     </Grid>
   )

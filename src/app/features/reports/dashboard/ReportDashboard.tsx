@@ -5,6 +5,7 @@ import LoadingComponent from '../../../layout/LoadingComponent';
 import { actions } from '../reportSlice';
 import { useFirestore } from '../../../hooks/firestore/useFirestore';
 import { useEffect } from 'react';
+import ReportFilter from './ReportFilter';
 
 export default function ReportDashboard() {
   const {data: reports, status} = useAppSelector(state => state.reports);
@@ -22,7 +23,7 @@ export default function ReportDashboard() {
         <ReportList reports={reports} />
       </Grid.Column>
       <Grid.Column width={6}>
-        <h2>Filters</h2>
+      <ReportFilter />
       </Grid.Column>
     </Grid>
   );
