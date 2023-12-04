@@ -125,20 +125,28 @@ export default function ReportForm() {
             />
           )}
         />
+        
 
         <Form.TextArea
           placeholder="Description"
           defaultValue={report?.description || ""}
-          {...register("description", { required: "Description is required" })}
+          {...register("description", { required: "Description is Required" })}
           error={errors.description && errors.description.message}
         />
         <Header sub content="Location details" color="teal" />
+
+        <Form.Input
+          placeholder="Place"
+          defaultValue={report?.place || ""}
+          {...register("place", { required: true })}
+          error={errors.place && "Place is Required"}
+        />
 
         <Form.Field>
           <Controller
             name="date"
             control={control}
-            rules={{ required: "Date is required" }}
+            rules={{ required: "Date is Required" }}
             defaultValue={(report && new Date(report.date)) || null}
             render={({ field }) => (
               <DatePicker
@@ -149,7 +157,7 @@ export default function ReportForm() {
                 showTimeSelect
                 timeCaption="time"
                 dateFormat="MMM d, yyyy h:mm aa"
-                placeholderText="Event date and time"
+                placeholderText="Report Date and Time"
               />
             )}
           />

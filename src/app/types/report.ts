@@ -13,7 +13,7 @@ export type AppReport = {
     users: User[]
     usersIds:string[]
     isHost?:boolean
-    isGoing?:booleans
+    isGoing?:boolean
 }
 
 export type User = {
