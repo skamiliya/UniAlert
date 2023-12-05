@@ -57,7 +57,7 @@ export default function ReportListItem({ report }: Props) {
           color="green"
           floated="right"
         >
-          <Button.Content visible>View Map</Button.Content>
+          <Button.Content visible>View</Button.Content>
           <Button.Content hidden>
             <Icon name="arrow right" />
           </Button.Content>
