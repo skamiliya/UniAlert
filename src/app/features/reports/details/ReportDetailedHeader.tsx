@@ -6,6 +6,7 @@ import { toast } from "react-toastify";
 import { useFirestore } from "../../../hooks/firestore/useFirestore";
 import { useState } from "react";
 import { arrayRemove, arrayUnion } from "firebase/firestore";
+import { format } from "date-fns";
 
 type Props = {
   report: AppReport;
@@ -75,7 +76,7 @@ export default function ReportDetailedHeader({ report }: Props) {
                   content={report.title}
                   style={{ color: "white" }}
                 />
-                <p style={{ color: "white" }}> {report.date} </p>
+                <p> {format(new Date(report.date), 'dd MMM yyyy, h:mm a')} </p>
                 <p style={{ color: "white" }}>{report.createBy} </p>
               </Item.Content>
             </Item>

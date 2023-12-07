@@ -2,6 +2,7 @@ import { Button, Icon, Item, ItemDescription, ItemGroup, Label, List, Segment, S
 import ReportListUser from "./ReportListUser";
 import { AppReport } from "../../../types/report";
 import { Link } from "react-router-dom";
+import { format } from "date-fns";
 
 type Props = {
   report: AppReport;
@@ -36,7 +37,7 @@ export default function ReportListItem({ report }: Props) {
       </Segment>
       <Segment>
         <span>
-          <Icon name="clock" /> {report.date}
+          <Icon name="clock" /> {format(new Date(report.date), 'dd MMM yyyy, h:mm a')}
           <Icon name="map marker alternate" /> {report.place}
         </span>
       </Segment>

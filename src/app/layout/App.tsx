@@ -1,7 +1,7 @@
 
 import { Container } from "semantic-ui-react"
 import NavBar from "./Nav/NavBar";
-import { Outlet, useLocation } from "react-router-dom";
+import { Outlet, ScrollRestoration, useLocation } from "react-router-dom";
 import HomePage from "../features/reports/home/HomePage";
 import ModalManager from "../common/modals/ModalManager";
 import { onAuthStateChanged } from "firebase/auth";
@@ -25,14 +25,15 @@ function App() {
         }
       },
       error: error => console.log(error),
-      complete: () => {}
+      complete: () => { }
     })
   }, [dispath])
-  
+
   return (
     <>
       {location.pathname === '/' ? <HomePage /> : (
         <>
+          <ScrollRestoration />
           <ModalManager />
           <NavBar />
           <Container className="main">

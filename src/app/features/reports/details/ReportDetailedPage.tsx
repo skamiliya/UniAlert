@@ -13,8 +13,8 @@ import { useFirestore } from '../../../hooks/firestore/useFirestore'
 export default function ReportDetailedPage() {
   const { id } = useParams();
   const report = useAppSelector(state => state.reports.data.find(rpt => rpt.id === id));
-  const {status} = useAppSelector(state => state.reports);
-  const {loadDocument} = useFirestore('reports');
+  const { status } = useAppSelector(state => state.reports);
+  const { loadDocument } = useFirestore('reports');
 
   useEffect(() => {
     if (!id) return;
@@ -30,10 +30,10 @@ export default function ReportDetailedPage() {
       <Grid.Column width={10}>
         <ReportDetailedHeader report={report} />
         <ReportDetailedInfo report={report} />
-        <ReportDetailedChat />
+        <ReportDetailedChat reportId={report.id} />
       </Grid.Column>
       <Grid.Column width={6}>
-        <ReportDetailedSidebar report = {report}/>
+        <ReportDetailedSidebar report={report} />
       </Grid.Column>
     </Grid>
   )

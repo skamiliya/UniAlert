@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Tab, Grid, Header, Card, Image } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
 import { Profile } from '../../types/profile';
@@ -6,6 +6,7 @@ import { useAppSelector } from '../../store/store';
 import { CollectionOptions } from '../../hooks/firestore/type';
 import { actions } from '../reports/reportSlice';
 import { useFirestore } from '../../hooks/firestore/useFirestore';
+import { format } from 'date-fns';
 
 type Props = {
   profile: Profile;
@@ -51,7 +52,7 @@ export default function ProfileReports({ profile }: Props) {
                 <Card.Content>
                   <Card.Header content={report.title} textAlign='center' />
                   <Card.Meta textAlign='center'>
-                    <span>{report.date}</span>
+                    <span> {format(new Date(report.date), 'dd MMM yyyy, h:mm a')} </span>
                   </Card.Meta>
                 </Card.Content>
               </Card>

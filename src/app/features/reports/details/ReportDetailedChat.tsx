@@ -1,92 +1,127 @@
-import { Form } from "semantic-ui-react"
-import {Segment, Header, Button, Comment,} from 'semantic-ui-react';
-export default function ReportDetailedChat() {
-  return (
-    <>
-<Segment
-    textAlign="center"
-    attached="top"
-    inverted
-    color="teal"
-    style={{border: 'none'}}
->
-    <Header>Comments </Header>
-</Segment>
+import { Segment, Header, Comment, } from 'semantic-ui-react';
+import ChatForm from "./ChatForm";
+import { useEffect, useState } from 'react';
+import { onChildAdded, ref } from 'firebase/database';
+import { fb } from '../../../config/firebase';
+import { ChatComment } from '../../../types/report';
+import { Link } from 'react-router-dom';
+import { formatDistance } from 'date-fns';
 
-<Segment attached>
-    <Comment.Group>
-        <Comment>
-            <Comment.Avatar src="/categoryImages/user.png"/>
-            <Comment.Content>
-                <Comment.Author as="a">Reva</Comment.Author>
-                <Comment.Metadata>
-                    <div>Today at 5:42PM</div>
-                </Comment.Metadata>
-                <Comment.Text>Tadi liat dimeja makan perpus!</Comment.Text>
-                <Comment.Actions>
-                    <Comment.Action>Reply</Comment.Action>
-                </Comment.Actions>
-            </Comment.Content>
-        </Comment>
+type Props = {
+    reportId: string
+}
 
-        <Comment>
-            <Comment.Avatar src="/categoryImages/user.png"/>
-            <Comment.Content>
-                <Comment.Author as="a">Brina</Comment.Author>
-                <Comment.Metadata>
-                    <div>Yesterday at 12:30AM</div>
-                </Comment.Metadata>
-                <Comment.Text>
-                    <p>
-                        Tadi kalo gasalah dah ada yang nyerahin ke petugasnya deh
-                    </p>
-                </Comment.Text>
-                <Comment.Actions>
-                    <Comment.Action>Reply</Comment.Action>
-                </Comment.Actions>
-            </Comment.Content>
-            <Comment.Group>
-                <Comment>
-                    <Comment.Avatar src="/categoryImages/user.png"/>
-                    <Comment.Content>
-                        <Comment.Author as="a">Cecil</Comment.Author>
-                        <Comment.Metadata>
-                            <div>Just now</div>
-                        </Comment.Metadata>
-                        <Comment.Text>AAA iyaa bener kata brina</Comment.Text>
-                        <Comment.Actions>
-                            <Comment.Action>Reply</Comment.Action>
-                        </Comment.Actions>
-                    </Comment.Content>
-                </Comment>
-            </Comment.Group>
-        </Comment>
+export default function ReportDetailedChat({ reportId }: Props) {
+    const [comments, setComments] = useState<ChatComment[]>([]);
+    const [replyForm, setReplyForm] = useState<any>({
+        open: false,
+        commentId: null
+    });
 
-        <Comment>
-            <Comment.Avatar src="/categoryImages/user.png"/>
-            <Comment.Content>
-                <Comment.Author as="a">Ruben</Comment.Author>
-                <Comment.Metadata>
-                    <div>5 days ago</div>
-                </Comment.Metadata>
-                <Comment.Text>Sudah ketemu belum?</Comment.Text>
-                <Comment.Actions>
-                    <Comment.Action>Reply</Comment.Action>
-                </Comment.Actions>
-            </Comment.Content>
-        </Comment>
+    useEffect(() => {
+        const chatRef = ref(fb, `chat/${reportId}`);
+        const unsubscribe = onChildAdded(chatRef, data => {
+            const comment = { ...data.val(), id: data.key };
+            setComments(prevState => ([
+                ...prevState, comment
+            ]))
+        })
 
-        <Form reply>
-            <Form.TextArea/>
-            <Button
-                content="Add Reply"
-                labelPosition="left"
-                icon="edit"
-                primary
-            />
-        </Form>
-    </Comment.Group>
-</Segment>
-</>
-  )
+        return () => unsubscribe();
+    }, [reportId])
+
+    function createCommentTree(data: ChatComment[]) {
+        const table = Object.create(null);
+        data.forEach(item => table[item.id] = { ...item, childNodes: [] });
+        const dataTree: ChatComment[] = [];
+        data.forEach(item => {
+            if (item.parentId) table[item.parentId].childNodes.push(table[item.id]);
+            else dataTree.push(table[item.id])
+        })
+        return dataTree;
+    }
+
+    return (
+        <>
+            <Segment
+                textAlign="center"
+                attached="top"
+                inverted
+                color="teal"
+                style={{ border: 'none' }}
+            >
+                <Header>Comments </Header>
+            </Segment>
+
+            <Segment attached style={{height: 400, overflowY: 'scroll'}}>
+            <ChatForm reportId={reportId} />
+                <Comment.Group style={{paddingBottom: 0, marginBottom: 0}}>
+                    {createCommentTree(comments).reverse().map(comment => (
+                        <Comment key={comment.id}>
+                            <Comment.Avatar src={comment.photoURL || "/categoryImages/user.png"} />
+                            <Comment.Content>
+                                <Comment.Author as={Link} to={`/profiles/${comment.uid}`}>
+                                    {comment.displayName}
+                                </Comment.Author>
+                                <Comment.Metadata>
+                                    <div>{formatDistance(comment.date, new Date())} ago</div>
+                                </Comment.Metadata>
+                                <Comment.Text>{comment.text}</Comment.Text>
+                                <Comment.Actions>
+                                    <Comment.Action
+                                        onClick={() => setReplyForm({ open: true, commentId: comment.id })}
+                                    >
+                                        Reply
+                                    </Comment.Action>
+                                    {replyForm.open && replyForm.commentId === comment.id && (
+                                        <ChatForm
+                                            key={comment.id}
+                                            reportId={reportId}
+                                            parentId={comment.id}
+                                            setReplyForm={setReplyForm}
+                                        />
+                                    )}
+                                </Comment.Actions>
+                            </Comment.Content>
+
+                            <Comment.Group style={{ paddingBottom: 0 }}>
+                                {comment.childNodes.map(child => (
+                                    <Comment key={child.id}>
+                                        <Comment.Avatar src={child.photoURL || "/categoryImages/user.png"} />
+                                        <Comment.Content>
+                                            <Comment.Author as={Link} to={`/profiles/${child.uid}`}>
+                                                {child.displayName}
+                                            </Comment.Author>
+                                            <Comment.Metadata>
+                                                <div>{formatDistance(child.date, new Date())} ago</div>
+                                            </Comment.Metadata>
+                                            <Comment.Text>{child.text}</Comment.Text>
+                                            <Comment.Actions>
+                                                <Comment.Action
+                                                    onClick={() => setReplyForm({ open: true, child: child.id })}
+                                                >
+                                                    Reply
+                                                </Comment.Action>
+                                                {replyForm.open && replyForm.commentId === child.id && (
+                                                    <ChatForm
+                                                        key={comment.id}
+                                                        reportId={reportId}
+                                                        parentId={child.parentId}
+                                                        setReplyForm={setReplyForm}
+                                                    />
+                                                )}
+                                            </Comment.Actions>
+                                        </Comment.Content>
+                                    </Comment>
+                                ))}
+
+                            </Comment.Group>
+                        </Comment>
+                    ))}
+
+                </Comment.Group>
+
+            </Segment>
+        </>
+    )
 }

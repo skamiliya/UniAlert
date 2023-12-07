@@ -1,5 +1,6 @@
 import { Button, Grid, Icon, Segment } from "semantic-ui-react";
 import { AppReport } from "../../../types/report";
+import { format } from "date-fns";
 
 type Props ={
     report: AppReport
@@ -25,7 +26,7 @@ export default function ReportDetailedInfo({report}: Props) {
                 <Icon name="calendar" size="large" color="teal"/>
             </Grid.Column>
             <Grid.Column width={15}>
-                <span>{report.date}</span>
+                <span> {format(new Date(report.date), 'dd MMM yyyy, h:mm a')} </span>
             </Grid.Column>
         </Grid>
     </Segment>
