@@ -5,11 +5,13 @@ import { GenericActions, GenericState, createGenericSlice } from "../../store/ge
 import { auth } from "../../config/firebase";
 
 type State = {
-  data: AppReport[]
+  data: AppReport[],
+  loadedInitial: boolean
 };
 
 const initialState: State = {
-  data: []
+  data: [],
+  loadedInitial: false
 };
 
 export const reportSlice = createGenericSlice({
@@ -18,18 +20,19 @@ export const reportSlice = createGenericSlice({
   reducers: {
     success: {
       reducer: (state, action: PayloadAction<AppReport[]>) => {
-        state.data = action.payload;
+        state.data = removeDuplicates([...action.payload, ...state.data])
         state.status = 'finished'
+        state.loadedInitial = true
       },
       prepare: (reports: any) => {
         let reportArray: AppReport[] = [];
         Array.isArray(reports) ? reportArray = reports : reportArray.push(reports)
         const mapped = reportArray.map((r: any) => {
-          return { 
-            ...r, 
-            date: (r.date as Timestamp).toDate().toISOString() ,
-            isHost:auth.currentUser?.uid === r.hostUid,
-            isGoing:r.userIds.includes(auth.currentUser?.uid)
+          return {
+            ...r,
+            date: (r.date as Timestamp).toDate().toISOString(),
+            isHost: auth.currentUser?.uid === r.hostUid,
+            isGoing: r.userIds.includes(auth.currentUser?.uid)
           }
         });
         return { payload: mapped }
@@ -39,3 +42,10 @@ export const reportSlice = createGenericSlice({
 });
 
 export const actions = reportSlice.actions as GenericActions<AppReport[]>
+
+function removeDuplicates(reports: AppReport[]) {
+  return Array.from(new Set(reports
+    .map(x => x.id)))
+    .map(id => reports.find(a => a.id === id) as AppReport)
+    .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
+}

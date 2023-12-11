@@ -1,38 +1,48 @@
-import { PayloadAction } from "@reduxjs/toolkit"
-import { GenericState, createGenericSlice } from "../../store/genericSlice"
-import { Profile } from "../../types/profile"
+import { PayloadAction } from '@reduxjs/toolkit'
+import { Timestamp } from 'firebase/firestore'
+import { createGenericSlice, GenericState } from '../../store/genericSlice'
+import { Profile } from '../../types/profile'
 
 type State = {
-    data : Profile[]
+    data: Profile[]
 }
 
 const initialState: State = {
     data: []
-
 }
 
-export const profileSlice = createGenericSlice ({
+export const profileSlice = createGenericSlice({
     name: 'profiles',
     initialState: initialState as GenericState<Profile[]>,
     reducers: {
-        success:{
-            reducer: (state, action:PayloadAction<Profile[]>)=>{
-                state.data= action.payload;
+        success: {
+            reducer: (state, action: PayloadAction<Profile[]>) => {
+                state.data = action.payload.map(profile => {
+                    const prevProfile = state.data.find(x => x.id === profile.id);
+                    return prevProfile ? {...prevProfile, ...profile} : profile
+                })
                 state.status = 'finished'
             },
-            prepare:(profiles)=>{
-                let profilesArray: Profile[]=[];
-                Array.isArray(profiles)?profilesArray = profiles: profilesArray.push(profiles);
-                const mapped = profilesArray.map(profile=>{
+            prepare: (profiles) => {
+                let profileArray: Profile[] = [];
+                Array.isArray(profiles) ? profileArray = profiles : profileArray.push(profiles);
+                const mapped = profileArray.map(profile => {
                     return {...profile, 
-                        createdAt: (profile.createdAt as unknown as TimeRanges).toDate().toISOString()
-                    }
+                        createdAt: (profile.createdAt as unknown as Timestamp)
+                            .toDate().toISOString()}
                 });
-                return {payload :mapped}
-
-            }  
+                return {payload: mapped}
+            }
+        },
+        setFollowing: (state, action) => {
+            state.data = state.data.map(profile => {
+                if (profile.id !== action.payload.id) return profile;
+                else {
+                    profile.isFollowing = action.payload.isFollowing;
+                    return profile
+                }
+            })
         }
-        
     }
 })
 

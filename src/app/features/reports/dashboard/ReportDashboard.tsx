@@ -1,47 +1,68 @@
-import { Grid, Sticky } from 'semantic-ui-react';
+import { Grid } from 'semantic-ui-react';
 import ReportList from './ReportList';
-import { useAppSelector } from '../../../store/store';
+import { useAppDispatch, useAppSelector } from '../../../store/store';
 import { actions } from '../reportSlice';
 import { useFirestore } from '../../../hooks/firestore/useFirestore';
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import ReportFilter from './ReportFilter';
 import { QueryOptions } from '../../../hooks/firestore/type';
 import ReportListItemPlaceholder from './ReportListItemPlaceholder';
 
 export default function ReportDashboard() {
-  const contextRef= useRef(null)
-  const {data: reports, status} = useAppSelector(state => state.reports);
-  const {loadCollection} = useFirestore('reports');
+  const dispatch = useAppDispatch();
+  const { data: reports, status, loadedInitial } = useAppSelector(state => state.reports);
+  const { loadCollection, hasMore } = useFirestore('reports');
   const [query, setQuery] = useState<QueryOptions[]>([
-    {attribute:'date', operator:'>=',value:new Date()}
+    { attribute: 'date', operator: '>=', value: new Date() }
   ])
 
-  useEffect(() => {
-    loadCollection(actions,{
-      queries:query
+  const loadReports = useCallback(async (reset?: boolean) => {
+    loadCollection(actions, {
+      queries: query,
+      limit: 2,
+      sort: { attribute: 'date', order: 'asc' },
+      pagination: true,
+      reset,
+      get: true
     })
-  }, [loadCollection, query]);
+  }, [loadCollection, query])
 
- 
+  useEffect(() => {
+    loadReports(true);
+
+    return () => {
+      dispatch(actions.reset());
+    }
+  }, [loadReports, dispatch])
+
+  function loadMore() {
+    loadReports();
+  }
 
   return (
     <Grid>
-      <Grid.Column width={10} ref={contextRef} >
-        {status==='loading'?(
+      <Grid.Column width={10}>
+        {!loadedInitial ? (
           <>
-          <ReportListItemPlaceholder/>
-          <ReportListItemPlaceholder/>
+            <ReportListItemPlaceholder />
+            <ReportListItemPlaceholder />
           </>
-        ):(
-          <ReportList reports={reports}/>
+        ) : (
+          <>
+                <ReportList
+                reports = { reports }
+                hasMore={hasMore.current}
+                loadMore={loadMore}
+                loading={status === 'loading'}
+              />
+          </>
         )}
       </Grid.Column>
       <Grid.Column width={6}>
-        <Sticky context = {contextRef.current} offset={55} >
-        <ReportFilter setQuery={setQuery}/>
-        </Sticky>
-     
+        <div className='ui fixed top sticky' style={{ top: 98, width: 405, zIndex: 1 }}>
+          <ReportFilter setQuery={setQuery} />
+        </div>
       </Grid.Column>
     </Grid>
-  );
+  )
 }
