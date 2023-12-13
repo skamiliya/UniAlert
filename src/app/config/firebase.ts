@@ -9,7 +9,10 @@ import 'firebase/database'
 import { getStorage } from "firebase/storage";
 import { getDatabase } from "firebase/database";
 
-// Your web app's Firebase configuration
+declare global {
+  // eslint-disable-next-line no-var
+  var FIREBASE_APPCHECK_DEBUG_TOKEN: boolean | string | undefined
+}
  const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
   authDomain: "unialert-e53b9.firebaseapp.com",

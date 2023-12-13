@@ -8,7 +8,7 @@ type Props = {
 
 export default function FollowCard({profile}: Props) {
     return (
-        <Card as={Link} to={'/profiles/${profile.id}'}>
+        <Card as={Link} to={`/profiles/${profile.id}`}>
             <Image src={profile.photoURL || '/user.png'} />
             <Card.Content>
                 <Card.Header>{profile.displayName}</Card.Header>

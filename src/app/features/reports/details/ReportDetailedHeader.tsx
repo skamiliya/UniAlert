@@ -1,8 +1,7 @@
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Segment, Item, Header, Button, Image } from "semantic-ui-react";
 import { AppReport } from "../../../types/report";
 import { useAppSelector } from "../../../store/store";
-import { toast } from "react-toastify";
 import { useFirestore } from "../../../hooks/firestore/useFirestore";
 import { useState } from "react";
 import { arrayRemove, arrayUnion } from "firebase/firestore";
@@ -16,7 +15,8 @@ export default function ReportDetailedHeader({ report }: Props) {
   const { currentUser } = useAppSelector((state) => state.auth);
   const [loading, setLoading] = useState(false);
   const { update } = useFirestore("reports");
-
+  const navigate = useNavigate();
+  const location = useLocation();
   const reportImageStyle = {
     filter: "brightness(30%)",
   };
@@ -31,11 +31,8 @@ export default function ReportDetailedHeader({ report }: Props) {
   };
 
   async function toggleUsers() {
-    if (!currentUser) {
-      toast.error("Must Be Logged in to do this");
-      return;
-    }
-
+    if (!currentUser) return navigate ('/unauthorized', {state:{from: location.pathname}})
+    
     setLoading(true);
 
     if (report.isGoing) {

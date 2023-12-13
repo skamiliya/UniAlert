@@ -17,6 +17,7 @@ export type AppReport = {
 }
 
 export type User = {
+    displayName: string
     id: string
     name: string
     photoURL: string

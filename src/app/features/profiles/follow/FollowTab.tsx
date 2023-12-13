@@ -2,7 +2,7 @@ import { Card, Grid, Header, Tab } from "semantic-ui-react"
 import { useAppSelector } from "../../../store/store";
 import { useFirestore } from "../../../hooks/firestore/useFirestore";
 import { useEffect } from "react";
-import { actions } from "../profileSlice";
+import { actions } from "./followSlice";
 import FollowCard from "./FollowCard";
 
 type Props = {

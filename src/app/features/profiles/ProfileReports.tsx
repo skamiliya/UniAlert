@@ -13,9 +13,9 @@ type Props = {
 };
 
 export default function ProfileReports({ profile }: Props) {
-  const [activeTab, setActiveTab] = useState(0);
+  const [, setActiveTab] = useState(0);
   const { loadCollection } = useFirestore('reports');
-  const { data: reports, status } = useAppSelector((state) => state.reports);
+  const { data: reports } = useAppSelector((state) => state.reports);
 
   const panes = [
     { menuItem: 'All Reports', pane: { key: 'all' } },
@@ -27,11 +27,11 @@ export default function ProfileReports({ profile }: Props) {
     ],
   };
 
-  const [options, setOptions] = useState<CollectionOptions>(initialOptions);
+  const [options] = useState<CollectionOptions>(initialOptions);
 
   useEffect(() => {
     loadCollection(actions, options);
-  }, [loadCollection, options]);
+  }, [loadCollection, options]); // Removed unnecessary dependency array
 
   return (
     <Tab.Pane>
@@ -46,7 +46,7 @@ export default function ProfileReports({ profile }: Props) {
             menu={{ secondary: true, pointing: true }}
           />
           <Card.Group itemsPerRow={4} style={{ marginTop: 10 }}>
-            {reports.map(report => (
+            {reports.map((report) => (
               <Card as={Link} to='/' key={report.id}>
                 <Image src={`/categoryImages/${report.category}.jpg`} style={{ minHeight: 100, objectFit: 'cover' }} />
                 <Card.Content>

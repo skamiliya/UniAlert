@@ -7,6 +7,7 @@ import { useCallback, useEffect, useState } from 'react';
 import ReportFilter from './ReportFilter';
 import { QueryOptions } from '../../../hooks/firestore/type';
 import ReportListItemPlaceholder from './ReportListItemPlaceholder';
+import EmptyState from '../../../layout/EmptyState';
 
 export default function ReportDashboard() {
   const dispatch = useAppDispatch();
@@ -49,12 +50,18 @@ export default function ReportDashboard() {
           </>
         ) : (
           <>
-                <ReportList
+          {reports.length === 0 ?(
+            <EmptyState/>
+          ):(
+            <ReportList
                 reports = { reports }
                 hasMore={hasMore.current}
                 loadMore={loadMore}
                 loading={status === 'loading'}
               />
+
+          )}
+                
           </>
         )}
       </Grid.Column>

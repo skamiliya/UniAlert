@@ -1,6 +1,7 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit"
 import { AppUser } from "../../types/user"
-import { User } from "../../types/report"
+import { User } from "firebase/auth"
+
 
 type State = {
     authenticated: boolean

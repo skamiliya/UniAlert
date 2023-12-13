@@ -4,6 +4,8 @@ import { toast } from "react-toastify";
 import { Form, Loader } from "semantic-ui-react";
 import { auth, fb } from "../../../config/firebase";
 import { push, ref, set } from "firebase/database";
+import { useLocation, useNavigate } from "react-router-dom";
+import { useAppSelector } from "../../../store/store";
 
 type Props = {
     reportId: string
@@ -16,8 +18,13 @@ export default function ChatForm({reportId, parentId, setReplyForm}: Props) {
         mode: 'onTouched',
         defaultValues: { comment: '' }
     })
+    const {authenticated}= useAppSelector(state=>state.auth);
+    const navigate = useNavigate();
+    const location = useLocation();
 
     async function onSubmit(data: FieldValues) {
+        if (!authenticated) return navigate ('/unauthorized', {state:{from: location.pathname}})
+    
         try {
             const chatRef = ref(fb, `chat/${reportId}`)
             const newChatRef = push(chatRef);

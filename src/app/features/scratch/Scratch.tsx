@@ -1,4 +1,4 @@
-import React from 'react'
+
 import { useAppDispatch, useAppSelector } from '../../store/store'
 import { Button } from 'semantic-ui-react'
 import { decrement, increment, incrementByAmount } from './testSlice';
