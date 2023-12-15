@@ -13,7 +13,7 @@ export default function NavBar() {
     <Menu inverted={true} fixed='top'>
       <Container>
         <MenuItem header as={NavLink} to='/'>
-          <img src="/logo.png" alt="logo" />
+          <img src="/categoryImages/logo.png" alt="logo" />
           UniAlert
         </MenuItem>
         <MenuItem name='Report' as={NavLink} to={`/reports`} />
