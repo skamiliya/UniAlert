@@ -59,7 +59,7 @@ export default function ReportDetailedHeader({ report }: Props) {
     <Segment.Group>
       <Segment basic attached="top" style={{ padding: "0" }}>
         <Image
-          src={`/categoryImages/${report.category}.jpg`}
+          src={`/categoryImages/${report.category}.png`}
           fluid
           style={reportImageStyle}
         />
